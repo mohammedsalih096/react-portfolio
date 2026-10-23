@@ -1,68 +1,67 @@
-import { motion } from "framer-motion";
-import { fadeInUp, staggerContainer } from "../utils/animations";
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { animate, useInView, useReducedMotion } from 'motion/react';
+import Reveal from './Reveal';
+
+const proof = [
+  { value: '09', label: 'PROJECTS IN THE PORTFOLIO', detail: 'From business sites to mobile apps', tone: 'lime' },
+  { value: '04', label: 'INDUSTRY ROLES', detail: 'Across product and web teams', tone: 'coral' },
+  { value: '02', label: 'PRODUCT LANES', detail: 'Web experiences and mobile apps', tone: 'teal' },
+];
+
+function CountUp({ value }: { value: string }) {
+  const numberRef = useRef<HTMLSpanElement>(null);
+  const inView = useInView(numberRef, { once: true, amount: .8 });
+  const reduceMotion = useReducedMotion();
+  const [display, setDisplay] = useState(reduceMotion ? value : '0'.repeat(value.length));
+
+  useEffect(() => {
+    if (!inView) return;
+    if (reduceMotion) {
+      setDisplay(value);
+      return;
+    }
+    const controls = animate(0, Number(value), {
+      duration: 1.15,
+      ease: 'easeOut',
+      onUpdate: (latest) => setDisplay(String(Math.floor(latest)).padStart(value.length, '0')),
+    });
+    return () => controls.stop();
+  }, [inView, reduceMotion, value]);
+
+  return <strong><span ref={numberRef}>{display}</span></strong>;
+}
 
 export default function About() {
   return (
-    <section id="about" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          className="text-3xl md:text-4xl font-bold text-center mb-16"
-          variants={fadeInUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          About Me
-        </motion.h2>
+    <section className="about section-wrap section-pad" id="about" aria-labelledby="about-title">
+      <div className="section-heading section-heading--split about-heading">
+          <div><p className="section-kicker">02 / BY THE NUMBERS</p><h2 id="about-title">A few things,<br /><span>well built.</span></h2></div>
+        <p className="section-intro">A few numbers to show the range of work, and a little context about the developer behind it.</p>
+      </div>
 
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          <motion.div
-            className="aspect-square rounded-2xl overflow-hidden"
-            variants={fadeInUp}
-          >
-            <img
-              src="/piyush.png"
-              alt="Piyush Agarwal"
-              className="w-full h-full object-cover rounded-2xl"
-            />
-          </motion.div>
+      <div className="proof-grid" aria-label="Portfolio highlights">
+        {proof.map((item, index) => (
+          <Reveal className={`proof-card proof-card--${item.tone}`} delay={index * 0.07} key={item.label}>
+            <span className="proof-index">0{index + 1} / FIELD NOTE</span>
+            <CountUp value={item.value} />
+            <p>{item.label}</p>
+            <small>{item.detail}</small>
+          </Reveal>
+        ))}
+      </div>
 
-          <motion.div className="space-y-6" variants={staggerContainer}>
-            <motion.p className="text-lg text-gray-600" variants={fadeInUp}>
-              Hi, I'm Piyush Agarwal, a passionate Full Stack Developer and
-              educator. I create content on YouTube through my channel
-              RoadsideCoder, where I share my knowledge and experience with the
-              developer community.
-            </motion.p>
-
-            <motion.p className="text-lg text-gray-600" variants={fadeInUp}>
-              With extensive experience in modern web technologies and a strong
-              foundation in both frontend and backend development, I help
-              businesses build scalable solutions and mentor aspiring developers
-              to achieve their goals.
-            </motion.p>
-
-            <motion.div
-              className="grid grid-cols-2 gap-4 pt-4"
-              variants={fadeInUp}
-            >
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-bold text-xl text-gray-900">3+</h3>
-                <p className="text-gray-600">Years Experience</p>
-              </div>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-bold text-xl text-gray-900">125K+</h3>
-                <p className="text-gray-600">YouTube Subscribers</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        </motion.div>
+      <div className="about-story">
+        <Reveal className="about-statement">
+          <p className="section-kicker">THE SHORT VERSION</p>
+          <h3>Web, mobile,<br />the <em>whole</em> picture.</h3>
+        </Reveal>
+        <Reveal className="about-copy" delay={0.08}>
+          <p>I’m Mohammed, a software developer who has worked across mobile apps, web applications and business websites. I like turning a rough need into a clear interface, then making sure the details behind it hold together.</p>
+          <p>My experience includes Flutter, Angular, NestJS and modern web work. Each team and project has taught me to stay adaptable, communicate clearly and keep the person using the product in view.</p>
+          <div className="about-pill-row"><span>FRONTEND</span><span>MOBILE</span><span>FULL-STACK</span><span>DELIVERY</span></div>
+        </Reveal>
       </div>
     </section>
   );

@@ -1,46 +1,51 @@
-import { TimelineItem } from '../types';
+import type { TimelineItem } from '../types';
 
 export const timelineData: TimelineItem[] = [
   {
-    year: '2024 - Present',
-    title: 'Founder',
-    company: 'RoadsideCoder',
-    description: 'Teacher on YouTube and Freelance Developer',
-    icon: 'work'
+    period: 'NOV 2025 — PRESENT',
+    title: 'Web Developer',
+    company: 'MSH Alquraish',
+    location: 'Dammam, Saudi Arabia',
+    description: 'Developing and delivering websites for business use.',
+    icon: 'work',
+    projects: [
+      { title: 'Food Palace', href: 'https://foodpalace.org/' },
+      { title: 'Rehaz Resort', href: 'https://rehazresort.netlify.app/' },
+    ],
   },
   {
-    year: '2021 - 2024',
-    title: 'Software Engineer',
-    company: 'Cars24',
-    description: 'Full Stack Development with React, Node.js, and AWS',
-    icon: 'work'
+    period: 'AUG 2026 — OCT 2026',
+    title: 'Web Developer',
+    company: 'OnePage',
+    type: 'Three-month contract',
+    description: "Contributed to the development of the Medera website on a contract basis.",
+    icon: 'work',
+    projects: [{ title: 'Medera', href: 'https://medera.sa/' }],
   },
   {
-    year: '2021',
-    title: 'Frontend Developer',
-    company: 'Incredible.dev',
-    description: 'Building modern web applications with React and TypeScript',
-    icon: 'work'
+    period: '2024 — 2025',
+    title: 'Jr Software Engineer',
+    company: 'Infoline Technologies',
+    description: 'Software development with Angular, NestJS and PostgreSQL.',
+    icon: 'work',
+    projects: [{ title: 'Infer', href: 'https://demo.infolinetech.in/admin/survey-builder/web/44/survey-explorer/questions/Q1' }],
   },
   {
-    year: '2021',
-    title: 'DevOps Engineer',
-    company: 'BNP Paribas',
-    description: 'Managing cloud infrastructure and CI/CD pipelines',
-    icon: 'work'
+    period: '2023 — 2024',
+    title: 'Flutter Developer',
+    company: 'Progbiz Pvt. Ltd.',
+    description: 'Mobile application development with Flutter.',
+    icon: 'work',
+    projects: [
+      { title: 'Sunstar Movers', href: 'https://play.google.com/store/apps/details?id=io.progbiz.sunstarmovers&pcampaignid=web_share' },
+      { title: 'KE Unplugged', href: 'https://play.google.com/store/apps/details?id=com.infolinetech.base_app.base_app' },
+    ],
   },
   {
-    year: '2019 - 2021',
-    title: 'Master of Computer Applications',
-    company: 'VIT Vellore',
-    description: 'Focused on advanced computing and software development',
-    icon: 'education'
+    period: '2019 — 2023',
+    title: 'Bachelor of Technology in Computer Science',
+    company: 'APJ Abdul Kalam Technological University',
+    description: 'Undergraduate studies in computer science and programming.',
+    icon: 'education',
   },
-  {
-    year: '2016 - 2019',
-    title: 'Bachelor of Computer Applications',
-    company: 'VSICS',
-    description: 'Foundation in computer science and programming',
-    icon: 'education'
-  }
 ];

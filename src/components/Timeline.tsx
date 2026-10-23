@@ -1,70 +1,29 @@
-import { Briefcase, GraduationCap } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowUpRight, BriefcaseBusiness, GraduationCap } from 'lucide-react';
+import Reveal from './Reveal';
 import { timelineData } from '../data/timeline';
 
 export default function Timeline() {
   return (
-    <section id="timeline" className="py-20 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2 
-          className="text-3xl md:text-4xl font-bold text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          Experience & Education
-        </motion.h2>
-        
-        <div className="relative">
-          {/* Vertical Line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gray-200" />
-
-          <div className="space-y-12">
-            {timelineData.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
-              >
-                {/* Content */}
-                <div className="w-1/2 pr-8 pl-8">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    className={`bg-white p-6 rounded-lg shadow-md ${
-                      index % 2 === 0 ? 'text-right' : 'text-left'
-                    }`}
-                  >
-                    <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium mb-2">
-                      {item.year}
-                    </span>
-                    <h3 className="text-xl font-bold text-gray-900">{item.title}</h3>
-                    <p className="text-indigo-600 font-medium">{item.company}</p>
-                    <p className="text-gray-600 mt-2">{item.description}</p>
-                  </motion.div>
-                </div>
-
-                {/* Icon */}
-                <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
-                  className="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center z-10"
-                >
-                  {item.icon === 'work' ? (
-                    <Briefcase className="w-6 h-6 text-white" />
-                  ) : (
-                    <GraduationCap className="w-6 h-6 text-white" />
-                  )}
-                </motion.div>
-
-                {/* Empty space for the other side */}
-                <div className="w-1/2" />
-              </motion.div>
-            ))}
-          </div>
-        </div>
+    <section className="experience section-wrap section-pad" id="experience" aria-labelledby="experience-title">
+      <div className="section-heading section-heading--split">
+        <div><p className="section-kicker">04 / THE JOURNEY</p><h2 id="experience-title">Where I’ve<br /><span>learned.</span></h2></div>
+        <p className="section-intro">Experience across web, mobile and software development, alongside my computer science studies.</p>
+      </div>
+      <div className="timeline-list">
+        {timelineData.map((item, index) => {
+          const Icon = item.icon === 'work' ? BriefcaseBusiness : GraduationCap;
+          return (
+            <Reveal className={`timeline-item${item.icon === 'education' ? ' timeline-item--education' : ''}`} delay={index * 0.045} key={`${item.company}-${item.title}`}>
+              <span className="timeline-icon" aria-hidden="true"><Icon size={17} strokeWidth={1.6} /></span>
+              <div className="timeline-period">{item.period}</div>
+              <div className="timeline-body">
+                <div className="timeline-heading"><div><h3>{item.title}</h3><p>{item.company}{item.location ? <><span> · </span>{item.location}</> : null}</p></div>{item.type && <span className="timeline-type">{item.type}</span>}</div>
+                <p className="timeline-description">{item.description}</p>
+                {item.projects && item.projects.length > 0 && <div className="timeline-projects"><span>RELATED WORK</span>{item.projects.map((project) => <a key={project.title} href={project.href} target="_blank" rel="noopener noreferrer">{project.title}<ArrowUpRight size={12} /></a>)}</div>}
+              </div>
+            </Reveal>
+          );
+        })}
       </div>
     </section>
   );

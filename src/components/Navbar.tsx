@@ -1,67 +1,53 @@
-import { Menu, X, Github, Linkedin, Mail } from 'lucide-react';
-import { useState } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
+
+const links = [
+  { label: 'PROJECTS', href: '#projects' },
+  { label: 'STACK', href: '#skills' },
+  { label: 'PROOF', href: '#about' },
+  { label: 'CONTACT', href: '#contact' },
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const progress = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setIsOpen(false); };
+    window.addEventListener('keydown', closeOnEscape);
+    document.body.classList.toggle('menu-is-open', isOpen);
+    return () => {
+      window.removeEventListener('keydown', closeOnEscape);
+      document.body.classList.remove('menu-is-open');
+    };
+  }, [isOpen]);
+
+  const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav className="fixed w-full bg-white/80 backdrop-blur-sm z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <a href="#hero" className="text-2xl font-bold text-gray-900">
-            Portfolio
-          </a>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors">About</a>
-            <a href="#skills" className="text-gray-700 hover:text-gray-900 transition-colors">Skills</a>
-            <a href="#projects" className="text-gray-700 hover:text-gray-900 transition-colors">Projects</a>
-            <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors">Contact</a>
-            <div className="flex items-center space-x-4">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-gray-900">
-                <Github className="w-5 h-5" />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-gray-900">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="mailto:your.email@example.com" className="text-gray-700 hover:text-gray-900">
-                <Mail className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-
-          {/* Mobile Navigation Button */}
-          <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700">
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation Menu */}
+    <>
+      <div className="reading-progress" aria-hidden="true"><motion.span style={reduceMotion ? undefined : { scaleX: progress }} /></div>
+      <header className="site-nav">
+        <a className="nav-brand" href="#home" aria-label="Mohammed Salih, home"><span>MS</span></a>
+        <nav className="nav-links" aria-label="Main navigation">
+          {links.map((link) => <a href={link.href} key={link.href}>{link.label}</a>)}
+        </nav>
+        <button className="mobile-menu-toggle" type="button" aria-expanded={isOpen} aria-controls="mobile-nav" aria-label={isOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setIsOpen((open) => !open)}>
+          {isOpen ? <><span>CLOSE</span><X size={16} /></> : <><span>MENU</span><Menu size={16} /></>}
+        </button>
+      </header>
+      <AnimatePresence>
         {isOpen && (
-          <div className="md:hidden">
-            <div className="flex flex-col space-y-4 px-2 pt-2 pb-3">
-              <a href="#about" className="text-gray-700 hover:text-gray-900" onClick={() => setIsOpen(false)}>About</a>
-              <a href="#skills" className="text-gray-700 hover:text-gray-900" onClick={() => setIsOpen(false)}>Skills</a>
-              <a href="#projects" className="text-gray-700 hover:text-gray-900" onClick={() => setIsOpen(false)}>Projects</a>
-              <a href="#contact" className="text-gray-700 hover:text-gray-900" onClick={() => setIsOpen(false)}>Contact</a>
-              <div className="flex space-x-4 py-2">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-gray-900">
-                  <Github className="w-5 h-5" />
-                </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-gray-900">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a href="mailto:your.email@example.com" className="text-gray-700 hover:text-gray-900">
-                  <Mail className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
-          </div>
+          <motion.nav id="mobile-nav" className="mobile-nav" aria-label="Mobile navigation" initial={reduceMotion ? false : { opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: reduceMotion ? 0 : 0.2 }}>
+            {links.map((link, index) => <motion.a href={link.href} onClick={closeMenu} key={link.href} initial={reduceMotion ? false : { opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: reduceMotion ? 0 : index * 0.045 }}><span>0{index + 1}</span>{link.label}<ArrowUpRight size={16} /></motion.a>)}
+          </motion.nav>
         )}
-      </div>
-    </nav>
+      </AnimatePresence>
+    </>
   );
 }
